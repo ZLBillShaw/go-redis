@@ -1,0 +1,7 @@
+[INFO][server.go:36] 2024/03/18 22:54:00 start listen
+[INFO][server.go:60] 2024/03/18 22:55:13 accepted link
+[INFO][echo.go:49] 2024/03/18 22:55:13 Connection close
+[INFO][server.go:60] 2024/03/18 22:55:14 accepted link
+[INFO][echo.go:49] 2024/03/18 22:55:14 Connection close
+[INFO][server.go:44] 2024/03/18 22:56:07 shutting down
+[INFO][echo.go:64] 2024/03/18 22:56:07 handler shutting down
