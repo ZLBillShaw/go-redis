@@ -10,7 +10,7 @@ import (
 
 type DB struct {
 	index int
-	data  dict.Dict
+	data  *dict.SyncDict
 }
 
 type ExecFunc func(db *DB, args [][]byte) resp.Reply
@@ -18,9 +18,7 @@ type ExecFunc func(db *DB, args [][]byte) resp.Reply
 type CmdLine = [][]byte
 
 func makeDB() *DB {
-	db := &DB{
-		data: dict.MakeSyncDict(),
-	}
+	db := &DB{data: dict.MakeSyncDict()}
 	return db
 }
 
