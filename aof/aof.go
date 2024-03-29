@@ -5,7 +5,10 @@ import (
 	"go-redis/interface/database"
 	"go-redis/lib/logger"
 	"go-redis/lib/utils"
+	"go-redis/resp/connection"
+	"go-redis/resp/parser"
 	"go-redis/resp/reply"
+	"io"
 	"os"
 	"strconv"
 )
@@ -76,5 +79,34 @@ func (handler *AofHandler) handleAof() {
 }
 
 func (handler *AofHandler) LoadAof() {
-
+	file, err := os.Open(handler.aofFileName)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	defer file.Close()
+	ch := parser.ParseStream(file)
+	fackConn := &connection.Connection{}
+	for payload := range ch {
+		if payload.Err != nil {
+			if payload.Err == io.EOF {
+				break
+			}
+			logger.Error(payload.Err)
+			continue
+		}
+		if payload.Data == nil {
+			logger.Error("empty payload")
+			continue
+		}
+		r, ok := payload.Data.(*reply.MultiBulkReply)
+		if !ok {
+			logger.Error("exec err, need multi bulk")
+			continue
+		}
+		rep := handler.database.Exec(fackConn, r.Args)
+		if reply.IsErrReply(rep) {
+			logger.Error(rep)
+		}
+	}
 }
