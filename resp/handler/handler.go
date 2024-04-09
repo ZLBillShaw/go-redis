@@ -10,12 +10,12 @@ var unknownErrReplyBytes = []byte("ERR unknown\r\n")
 
 type RespHandler struct {
 	activeConn sync.Map
-	db         *database.Database
+	db         *database.StandaloneDatabase
 	closing    atomic.Boolean
 }
 
 func MakeHandler() *RespHandler {
-	db := database.NewDatabase()
+	db := database.NewStandaloneDatabase()
 	return &RespHandler{db: db}
 }
 
